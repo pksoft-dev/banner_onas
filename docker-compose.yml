@@ -1,0 +1,60 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-admin}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-prestashop}
+    networks:
+      - prestashop_network
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  prestashop:
+    image: prestashop/prestashop:latest
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      DB_SERVER: ${DB_SERVER:-mysql}
+      DB_NAME: ${DB_NAME:-prestashop}
+      DB_USER: ${DB_USER:-root}
+      DB_PASSWD: ${DB_PASSWD:-admin}
+      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
+      PS_COUNTRY: ${PS_COUNTRY:-pl}
+      PS_LANGUAGE: ${PS_LANGUAGE:-pl}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8080}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+    networks:
+      - prestashop_network
+    volumes:
+      - ./:/var/www/html/modules/${PROJECT_NAME}
+      - psdata:/var/www/html/modules/${PROJECT_NAME}/img:rw
+      - psdata:/var/www/html
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: ${DB_SERVER:-mysql}
+      PMA_USER: ${DB_USER:-root}
+      PMA_PASSWORD: ${DB_PASSWD:-admin}
+    networks:
+      - prestashop_network
+networks:
+  prestashop_network:
+volumes:
+  psdata:
+  dbdata:

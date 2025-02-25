@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_')) {
 
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
-class Ps_Banner extends Module implements WidgetInterface
+class Banner_Onas extends Module implements WidgetInterface
 {
     /**
      * @var string Name of the module running on PS 1.6.x. Used for data migration.
@@ -40,7 +40,7 @@ class Ps_Banner extends Module implements WidgetInterface
 
     public function __construct()
     {
-        $this->name = 'ps_banner';
+        $this->name = 'banner_onas';
         $this->tab = 'front_office_features';
         $this->version = '2.1.2';
         $this->author = 'PrestaShop';
@@ -49,12 +49,12 @@ class Ps_Banner extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Banner', [], 'Modules.Banner.Admin');
+        $this->displayName = $this->trans('Banner (o nas)', [], 'Modules.Banner.Admin');
         $this->description = $this->trans('Add a banner to the homepage of your store to highlight your sales and new products in a visual and friendly way.', [], 'Modules.Banner.Admin');
 
         $this->ps_versions_compliancy = ['min' => '1.7.1.0', 'max' => _PS_VERSION_];
 
-        $this->templateFile = 'module:ps_banner/ps_banner.tpl';
+        $this->templateFile = 'module:banner_onas/ps_banner.tpl';
     }
 
     public function install()
@@ -266,11 +266,11 @@ class Ps_Banner extends Module implements WidgetInterface
 
     public function renderWidget($hookName, array $params)
     {
-        if (!$this->isCached($this->templateFile, $this->getCacheId('ps_banner'))) {
+        if (!$this->isCached($this->templateFile, $this->getCacheId('banner_onas'))) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $params));
         }
 
-        return $this->fetch($this->templateFile, $this->getCacheId('ps_banner'));
+        return $this->fetch($this->templateFile, $this->getCacheId('banner_onas'));
     }
 
     public function getWidgetVariables($hookName, array $params)

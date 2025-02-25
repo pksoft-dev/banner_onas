@@ -2,3 +2,4 @@
 /translations/*.php
 /.php_cs.cache
 /vendor/
+/.idea/

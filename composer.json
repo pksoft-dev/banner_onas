@@ -23,7 +23,7 @@
   },
   "autoload": {
     "classmap": [
-      "ps_banner.php"
+      "banner_onas.php"
     ]
   },
   "type": "prestashop-module"
